@@ -23,7 +23,13 @@ pipeline {
           sh 'docker login 84.201.137.61:8086 --username admin --password 159753Qaz && docker tag boxfuse:latest 84.201.137.61:8086/boxfuse:latest && docker push 84.201.137.61:8086/boxfuse:latest'
         }
       }
-
-
+      stage ('Run docker on prod') {
+        steps {
+          sh 'ssh-keyscan -H 84.201.164.182  >> ~/.ssh/known_hosts'
+          sh '''ssh root@84.201.164.182 << EOF
+      	sudo docker run -it --rm -p 8080:8080 -d 84.201.137.61:8086/boxfuse:latest
+      	EOF'''
+              }
+      }
   }
 }
