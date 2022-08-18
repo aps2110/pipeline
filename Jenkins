@@ -1,10 +1,10 @@
 pipeline {
   agent {
     docker {
-      image '84.201.137.61:8086/jenkins-agent'
+      image '51.250.102.132:8086/jenkins-agent'
       args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
       registryCredentialsId '62466ee9-e5fd-4586-9bfd-1dd477c36c3a'
-      registryUrl "http://84.201.137.61:8086"
+      registryUrl "http://51.250.102.132:8086"
     }
   }
 
@@ -22,16 +22,18 @@ pipeline {
       stage ('Make docker image') {
         steps {
           sh 'docker build -t boxfuse:latest .'
-          sh 'docker tag boxfuse:latest 84.201.137.61:8086/boxfuse:latest && docker push 84.201.137.61:8086/boxfuse:latest'
+          sh 'docker tag boxfuse:latest 51.250.102.132:8086/boxfuse:latest && docker push 51.250.102.132:8086/boxfuse:latest'
         }
       }
       stage ('Run docker on prod') {
         steps {
-          sh 'ssh-keyscan -H 84.201.164.182  >> ~/.ssh/known_hosts'
-          sh '''ssh root@84.201.164.182 << EOF
-      	sudo docker run -it --rm -p 8080:8080 -d 84.201.137.61:8086/boxfuse:latest
-      	EOF'''
-              }
+          sh 'ssh-keyscan -H 51.250.103.162  >> ~/.ssh/known_hosts'
+          sh '''ssh root@51.250.103.162 << EOF
+	sudo docker pull 51.250.102.132:8086/boxfuse:latest
+        	cd /opt/docker-compose
+        	sudo docker-compose up -d
+	EOF'''
+        }
       }
   }
 }
