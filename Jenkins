@@ -3,6 +3,8 @@ pipeline {
     docker {
       image '84.201.137.61:8086/jenkins-agent'
       args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+      registryCredentialsId '62466ee9-e5fd-4586-9bfd-1dd477c36c3a'
+      registryUrl "http://84.201.137.61:8086"
     }
   }
 
@@ -20,7 +22,7 @@ pipeline {
       stage ('Make docker image') {
         steps {
           sh 'docker build -t boxfuse:latest .'
-          sh 'docker login 84.201.137.61:8086 --username admin --password 159753Qaz && docker tag boxfuse:latest 84.201.137.61:8086/boxfuse:latest && docker push 84.201.137.61:8086/boxfuse:latest'
+          sh 'docker tag boxfuse:latest 84.201.137.61:8086/boxfuse:latest && docker push 84.201.137.61:8086/boxfuse:latest'
         }
       }
       stage ('Run docker on prod') {
