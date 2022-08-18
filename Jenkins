@@ -20,7 +20,7 @@ pipeline {
       stage ('Make docker image') {
         steps {
           sh 'docker build -t boxfuse:latest .'
-          sh 'docker login 130.193.42.13:8086:8086 --username admin --password 159753Qaz && docker tag boxfuse:latest 130.193.42.13:8086/boxfuse:latest && docker push 130.193.42.13:8086/boxfuse:latest'
+          sh 'docker login 130.193.42.13:8086 --username admin --password 159753Qaz && docker tag boxfuse:latest 130.193.42.13:8086/boxfuse:latest && docker push 130.193.42.13:8086/boxfuse:latest'
         }
       }
 
